@@ -1,11 +1,4 @@
-{
-  "functions": {
-    "api/webhook.js": { "runtime": "nodejs18.x" }
-  },
-  "rewrites": [
-    {
-      "source": "/api/webhook",
-      "destination": "/api/webhook.js"
-    }
-  ]
-}
+// api/index.js
+module.exports = (req, res) => {
+  res.status(200).send('Webhook de HabitatFlow inicializado. OK.');
+};

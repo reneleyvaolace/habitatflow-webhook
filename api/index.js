@@ -1,8 +1,5 @@
 // api/index.js (FINAL - Lógica de Calificación con fetch de Gemini)
 
-// Importamos fetch para hacer la llamada directa a la API (API KEY guardada en Vercel)
-import fetch from 'node-fetch';
-
 // System Prompt (Rol de la IA)
 const SYSTEM_PROMPT = `
     Eres 'HabitatFlow AI', un Agente Experto en Calificación de Leads Inmobiliarios.

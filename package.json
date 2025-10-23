@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Webhook para la API de WhatsApp con Gemini NLU",
   "dependencies": {
-    "@google/genai": "^0.1.0"
+    "@google/gen-ai": "^0.1.0" 
   },
   "scripts": {
     "start": "node api/index.js"

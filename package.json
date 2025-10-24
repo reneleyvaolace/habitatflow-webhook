@@ -2,8 +2,12 @@
   "name": "habitatflow-webhook-nlu",
   "version": "1.0.0",
   "description": "Webhook para la API de WhatsApp con Gemini NLU",
-  "dependencies": {},
+  "dependencies": {
+    "google-auth-library": "^9.0.0",
+    "node-fetch": "^3.3.2"
+  },
   "scripts": {
     "start": "node api/index.js"
-  }
+  },
+  "type": "module"
 }

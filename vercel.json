@@ -1,0 +1,20 @@
+{
+  "version": 2,
+  "headers": [
+    {
+      "source": "/api",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "text/plain"
+        }
+      ]
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api",
+      "dest": "/api/index.cjs"
+    }
+  ]
+}

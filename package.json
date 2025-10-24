@@ -4,10 +4,10 @@
   "description": "Webhook para la API de WhatsApp con Gemini NLU",
   "dependencies": {
     "google-auth-library": "^9.0.0",
-    "node-fetch": "^3.3.2"
-  },
+    "node-fetch": "^3.3.2" 
+  },  <-- ¡ASEGÚRATE DE QUE ESTA COMA EXISTA!
   "scripts": {
-    "start": "node api/index.cjs" // Asegúrate que el script apunte a .cjs
+    "start": "node api/index.cjs"
   }
-  // ELIMINAR LINEA "type": "module"
+  // NO DEBE HABER COMAS DESPUÉS DE LA ÚLTIMA PROPIEDAD ("start" en este caso).
 }

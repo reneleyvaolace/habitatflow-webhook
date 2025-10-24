@@ -1,19 +1,8 @@
 {
   "version": 2,
-  "headers": [
-    {
-      "source": "/process",
-      "headers": [
-        {
-          "key": "Content-Type",
-          "value": "text/plain"
-        }
-      ]
-    }
-  ],
   "routes": [
     {
-      "src": "/process",
+      "src": "/api",
       "dest": "/api/webhook.cjs"
     }
   ]

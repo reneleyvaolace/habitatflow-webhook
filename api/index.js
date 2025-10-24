@@ -123,20 +123,25 @@ async function getGeminiResponse(message) {
 
 
 // --- Handler Principal del Webhook ---
-module.exports = async (req, res) => {
+// REEMPLAZA "module.exports = async (req, res) => {"
+// POR ESTA SINTAXIS:
+export default async function handler(req, res) { 
     // 1. Manejo de la Petición de Verificación (GET) - Meta
     if (req.method === 'GET') {
-        const mode = req.query['hub.mode'];
-        const token = req.query['hub.verify_token'];
-        const challenge = req.query['hub.challenge'];
-
-        if (mode && token && mode === 'subscribe' && token === VERIFY_TOKEN) {
-            console.log('Verificacion GET exitosa.');
-            return res.status(200).send(challenge); 
-        } else {
-            return res.status(403).send('Token inválido.');
-        }
+        // ... (todo el código GET) ...
+        // ... [no tocar el return res.status(200).send(challenge);]
     } 
+
+    // 2. Manejo de la Recepción de Mensajes (POST) - WhatsApp
+    else if (req.method === 'POST') {
+        // ... (todo el código POST) ...
+    } 
+
+    // 3. Otros métodos HTTP
+    else {
+        res.status(405).send('Método no permitido');
+    }
+};
     
     // 2. Manejo de la Recepción de Mensajes (POST) - WhatsApp
     else if (req.method === 'POST') {

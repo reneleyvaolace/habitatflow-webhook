@@ -1,6 +1,6 @@
-// api/index.cjs (CÓDIGO COMPLETO EN COMMONJS)
+// api/index.cjs (CÓDIGO COMPLETO Y CORREGIDO EN COMMONJS)
 
-// Dependencias requeridas (asegúrate de que package.json las contenga)
+// Dependencias requeridas
 const { GoogleAuth } = require('google-auth-library');
 const fetch = require('node-fetch');
 
@@ -20,13 +20,13 @@ const VERIFY_TOKEN = 'coreaura-token-seguro-456';
 
 // 1. Escribir datos en Google Sheets
 async function writeToGoogleSheets(rowData) {
-    // Variables de Entorno de Vercel
+    // Variables de Entorno de Vercel (Deben estar configuradas)
     const sheetsId = process.env.GOOGLE_SHEETS_ID;
-
+    
     // Las claves privadas deben estar en el formato correcto en Vercel.
     const privateKeyJSON = JSON.parse(process.env.SHEETS_PRIVATE_KEY.replace(/\\n/g, '\n'));
-    const sheetsEmail = privateKeyJSON.client_email;
-
+    const sheetsEmail = privateKeyJSON.client_email; 
+    
     // Autenticación con GoogleAuth (para Clave de Servicio)
     const auth = new GoogleAuth({
         credentials: {
@@ -37,8 +37,8 @@ async function writeToGoogleSheets(rowData) {
     });
 
     try {
-        const accessToken = await auth.getAccessToken(); // Obtiene el token de acceso
-
+        const accessToken = await auth.getAccessToken();
+    
         // Llamada a la API de Google Sheets
         const response = await fetch(
             `https://sheets.googleapis.com/v4/spreadsheets/${sheetsId}/values/A1:append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS`,
@@ -46,14 +46,14 @@ async function writeToGoogleSheets(rowData) {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${accessToken}`, // Usa el token en el header
+                    'Authorization': `Bearer ${accessToken}`, 
                 },
                 body: JSON.stringify({
                     values: [rowData],
                 }),
             }
         );
-
+        
         if (!response.ok) {
             console.error('ERROR GOOGLE SHEETS:', response.status, await response.text());
         } else {
@@ -68,7 +68,7 @@ async function writeToGoogleSheets(rowData) {
 
 // 2. Comunicarse con Gemini para NLU
 async function getGeminiResponse(message) {
-    const apiKey = process.env.GEMINI_API_KEY;
+    const apiKey = process.env.GEMINI_API_KEY; 
     const prompt = `System Prompt: ${SYSTEM_PROMPT}\n\nUser Message: ${message}\n\nGenerate ONLY the JSON object:`;
 
     try {
@@ -87,30 +87,30 @@ async function getGeminiResponse(message) {
             }),
           }
         );
-
+        
         // Manejo de errores HTTP (401, 403, etc.)
         if (!response.ok) {
             const errorText = await response.text();
             console.error('Error HTTP de Gemini:', response.status, errorText);
-            throw new new Error(`Gemini API Error: ${response.status}`);
+            throw new Error(`Gemini API Error: ${response.status}`);
         }
-
+        
         const data = await response.json();
         const jsonText = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
 
         if (!jsonText) {
              throw new Error('Gemini no devolvió JSON válido.');
         }
-
-        return JSON.parse(jsonText);
+        
+        return JSON.parse(jsonText); 
 
       } catch (error) {
         console.error('Error llamando a Gemini:', error.message);
         // Respuesta de emergencia que fuerza el Handoff
-        return {
+        return { 
             RESPUESTA_USUARIO: 'Lo siento, hay un error en nuestro sistema de IA. Un agente humano te atenderá pronto.',
             HANDOFF_REQUERIDO: true,
-            INTENCION: 'ERROR'
+            INTENCION: 'ERROR' 
         };
       }
 }
@@ -118,7 +118,7 @@ async function getGeminiResponse(message) {
 
 // --- Handler Principal del Webhook (Exportación CommonJS) ---
 module.exports = async (req, res) => {
-    // 1. Manejo de la Petición de Verificación (GET)
+    // 1. Manejo de la Petición de Verificación (GET) - Meta
     if (req.method === 'GET') {
         const mode = req.query['hub.mode'];
         const token = req.query['hub.verify_token'];
@@ -126,11 +126,14 @@ module.exports = async (req, res) => {
 
         if (mode && token && mode === 'subscribe' && token === VERIFY_TOKEN) {
             console.log('Verificacion GET exitosa.');
+            // CORRECCIÓN FINAL: Añadir header para evitar descarga en el navegador
+            res.setHeader('Content-Type', 'text/plain'); 
             return res.status(200).send(challenge);
         } else {
+            res.setHeader('Content-Type', 'text/plain');
             return res.status(403).send('Token inválido.');
         }
-    }
+    } 
 
     // 2. Manejo de la Recepción de Mensajes (POST) - WhatsApp
     else if (req.method === 'POST') {
@@ -139,7 +142,6 @@ module.exports = async (req, res) => {
         const incomingMessage = messageObject?.text?.body;
         const waId = messageObject?.from;
 
-        // Solo procesamos mensajes de texto entrantes
         if (incomingMessage && waId) {
             const timestamp = new Date().toISOString();
 

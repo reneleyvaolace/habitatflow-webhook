@@ -9,5 +9,4 @@
   "scripts": {
     "start": "node api/index.js"
   },
-  "type": "module"
 }
